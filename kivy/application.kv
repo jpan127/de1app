@@ -1,0 +1,127 @@
+#:kivy 1.0.9
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+
+<MyTile@SmartTileWithStar>
+    size_hint_y: None
+    height: "240dp"
+
+<MyScreenManager>:
+    BrewScreen:
+    TestScreen:
+    HomeScreen:
+
+<TestScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDToolbar:
+            title: "MDNavigationRail"
+            md_bg_color: rail.md_bg_color
+
+        MDBoxLayout:
+
+            MDNavigationRail:
+                id: rail
+                md_bg_color: get_color_from_hex("#344954")
+                color_normal: get_color_from_hex("#718089")
+                color_active: get_color_from_hex("#f3ab44")
+
+                MDNavigationRailItem:
+                    icon: "language-cpp"
+                    text: "C++"
+
+                MDNavigationRailItem:
+                    icon: "language-python"
+                    text: "Python"
+
+                MDNavigationRailItem:
+                    icon: "language-swift"
+                    text: "Swift"
+
+            MDBoxLayout:
+                padding: "24dp"
+
+                ScrollView:
+
+                    MDList:
+                        id: box
+                        cols: 3
+                        spacing: "12dp"
+
+<HomeScreen>:
+    name: "home"
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "background.png"
+    FloatLayout:
+        Button:
+            on_press: root.switch_to_brew()
+            background_color: (0,0,0,0)
+            pos_hint: {"center_y": 0.5, "center_x": 0.225}
+            size_hint: (0.2, 0.2)
+        Button:
+            background_color: (0,0,0,0)
+            pos_hint: {"center_y": 0.5, "center_x": 3/6}
+            size_hint: (0.2, 0.2)
+        Button:
+            background_color: (0,0,0,0)
+            pos_hint: {"center_y": 0.5, "center_x": 0.775}
+            size_hint: (0.2, 0.2)
+
+<BrewScreen>:
+    name: "brew"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        MDToolbar:
+            title: "MDNavigationRail"
+            md_bg_color: rail.md_bg_color
+        MDBoxLayout:
+            orientation: "horizontal"
+            MDNavigationRail:
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 0, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                id: rail
+                md_bg_color: get_color_from_hex("#344954")
+                color_normal: get_color_from_hex("#718089")
+                color_active: get_color_from_hex("#f3ab44")
+
+                MDNavigationRailItem:
+                    icon: "language-cpp"
+                    text: "C++"
+
+                MDNavigationRailItem:
+                    icon: "language-python"
+                    text: "Python"
+
+                MDNavigationRailItem:
+                    icon: "language-swift"
+                    text: "Swift"
+            MDBoxLayout:
+                MDFloatLayout:
+                    canvas.before:
+                        Color:
+                            rgba: 1, 0, 0, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    BrewLayout:
+                        pos_hint: {"right": 1}
+                        orientation: "vertical"
+                        canvas.before:
+                            Color:
+                                rgba: 0, 1, 0, 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    MDFloatingActionButton:
+                        on_press: self.parent.toggle()
+                        text: "Start/Stop"
+                        pos_hint: {"center_y": 0.1, "center_x": 0.8}
+                        # size_hint: (0.2, 0.2)

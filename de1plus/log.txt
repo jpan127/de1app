@@ -1,0 +1,49 @@
+0. (2021-02-09 20:43:37) fast log file
+0. (2021-02-09 20:43:37) OS build info: 
+0. (2021-02-09 20:43:37) orientation: 
+0. (2021-02-09 20:43:37) ble scanner de1_ble_handler
+0. (2021-02-09 20:43:37) bluetooth_connect_to_devices
+0. (2021-02-09 20:43:37) ble_connect_to_de1
+0. (2021-02-09 20:43:37) simulated DE1 connection
+0. (2021-02-09 20:43:37) Connected to fake DE1
+0. (2021-02-09 20:43:37) Settings file: amazing_feature 3
+list_feature {1, 2, 3}
+string_feature {test test}
+
+
+0. (2021-02-09 20:43:37) Settings file: auto_upload 1
+visualizer_endpoint api/shots/upload
+visualizer_password passwd
+visualizer_url visualizer.coffee
+visualizer_username demo@demo123
+
+
+0. (2021-02-09 20:43:37) Settings file: webserver_magic_phrase "I really want an unsecured (non-SSL) Webserver on my coffee machine"
+webserver_magic_phrase_confirm ""
+webserver_port 8080
+webserver_authentication_key "ChangeMe"
+0. (2021-02-09 20:43:37) setup_images_for_first_page
+0. (2021-02-09 20:43:37) rtl 0
+0. (2021-02-09 20:43:37) set_de1_screen_saver_directory
+0. (2021-02-09 20:43:38) add_de1_image tabletstyles 1300 450 {}
+0. (2021-02-09 20:43:38) Commands available: 1050
+Instructions run: 145411
+Globals: 174
+Procs: 640
+After commands: 9
+Canvas objects: 1008
+Images loaded: 56
+BLE queue: 0
+Vectors: 57
+TOTAL vector length: 75 bytes
+Globals 174:
+TOTAL global variable memory used: 3048 bytes
+
+
+0. (2021-02-09 20:43:38) page_display_change splash->off
+0. (2021-02-09 20:43:38) borg brightness 10
+0. (2021-02-09 20:43:38) Battery is very low (-1 < 30) so lowering screen to 10
+0. (2021-02-09 20:43:38) borg brightness 10
+0. (2021-02-09 20:43:38) Loading skin image from disk: C:/Users/JP/Desktop/de1app/de1plus/skins/Insight/1280x800/espresso_3.png
+0. (2021-02-09 20:43:38) page_display_change image create photo off -file C:/Users/JP/Desktop/de1app/de1plus/skins/Insight/1280x800/espresso_3.png
+0. (2021-02-09 20:43:38) Switched to page: off
