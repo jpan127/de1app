@@ -20,12 +20,7 @@ from kivymd.app import MDApp
 from kivy.factory import Factory
 r = Factory.register
 r("NavigationRail", module="navigation_rail")
-
-class HomeScreen(kivy.uix.screenmanager.Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    def switch_to_brew(self):
-        self.manager.current = "brew"
+r("PlayButton", module="play_button")
 
 class GraphLayout(MDBoxLayout):
     def __init__(self, **kwargs):
@@ -64,29 +59,61 @@ class GraphLayout(MDBoxLayout):
             graph.xmax = max(graph.xmax, self.n)
             graph.ymax = max(graph.ymax, max(graph.plots[0].points, key=lambda xy: xy[1])[1])
 
-class BrewScreen(kivy.uix.screenmanager.Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    def switch_to_home(self):
-        self.manager.current = "home"
+class Screen(kivy.uix.screenmanager.Screen):
+    def on_enter(self, *args):
+        app = MDApp.get_running_app()
+        # On start up, rail is not initialized yet before entering the first screen
+        # Skip here and let the rail initialize the highlights in [on_start]
+        if not app.has_run_build:
+            return
+        # Update the item highlights for this screen's icon, and deactivate the others
+        app.rail.update_item_highlights(self.name)
 
-class MyScreenManager(kivy.uix.screenmanager.ScreenManager):
+class HomeScreen(Screen):
+    pass
+class BrewScreen(Screen):
     pass
 
 class Application(MDApp):
+    def __init__(self, **kwargs):
+        # Flag for other widgets to understand when [build] has finished running or not
+        # Lots of chances for widgets to invoke callbacks before then
+        self.has_run_build = False
+        super().__init__(**kwargs)
+
     @property
     def rail(self):
-        return self.root.get_screen("brew").ids.rail
+        """Helper for getting the rail instance"""
+        return self.root.get_screen("Brew").ids.rail
+
     def build(self):
-        return MyScreenManager()
+        """
+        Main startup callback
+        """
+        root = kivy.uix.screenmanager.ScreenManager(
+            transition=kivy.uix.screenmanager.FadeTransition())
+        # After the screen manager is instantiated, build is "finished"
+        self.has_run_build = True
+        return root
+
     def on_start(self):
-        self.rail.set_width(width=75, factor=2)
+        """
+        Callback after [build]
+        """
+        # Resize the rail to start closed and expand to 150 dp
+        self.rail.set_width(minimized_width=0, maximized_width=150)
+
+        # Highlight the right icon
+        self.rail.update_item_highlights(self.root.current)
+
     def rail_open(self):
-        TRANSITIONS = {
-            "open": "close",
-            "close": "open",
-        }
-        self.rail.rail_state = TRANSITIONS[self.rail.rail_state]
+        """
+        Toggle the rail state
+        """
+        self.rail.rail_state = {
+            "open"  : "close",
+            "close" : "open",
+        }[self.rail.rail_state]
 
 if __name__ == '__main__':
     Application().run()
