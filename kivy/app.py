@@ -1,5 +1,6 @@
 import random
 
+from kivy.lang import Builder
 from kivy.app import App
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
 from kivy.clock import Clock
@@ -9,10 +10,16 @@ from kivy.uix.button import Button
 import kivy.uix.screenmanager
 from kivy_garden.graph import Graph, MeshLinePlot
 from kivy.factory import Factory
+from kivy.metrics import dp
 
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.app import MDApp
+
+# Register custom elements
+from kivy.factory import Factory
+r = Factory.register
+r("NavigationRail", module="navigation_rail")
 
 class HomeScreen(kivy.uix.screenmanager.Screen):
     def __init__(self, **kwargs):
@@ -20,14 +27,7 @@ class HomeScreen(kivy.uix.screenmanager.Screen):
     def switch_to_brew(self):
         self.manager.current = "brew"
 
-class BrewLayout2(MDBoxLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.add_widget(Button(text="x"))
-        self.add_widget(Button(text="x"))
-        self.add_widget(Button(text="x"))
-
-class BrewLayout(MDBoxLayout):
+class GraphLayout(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.n = 1
@@ -67,22 +67,26 @@ class BrewLayout(MDBoxLayout):
 class BrewScreen(kivy.uix.screenmanager.Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-class TestScreen(kivy.uix.screenmanager.Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def switch_to_home(self):
+        self.manager.current = "home"
 
 class MyScreenManager(kivy.uix.screenmanager.ScreenManager):
     pass
 
 class Application(MDApp):
+    @property
+    def rail(self):
+        return self.root.get_screen("brew").ids.rail
     def build(self):
         return MyScreenManager()
-    # def on_start(self):
-    #     for i in range(9):
-    #         tile = Factory.MyTile(source="background.png")
-    #         tile.stars = 5
-    #         self.root.get_screen("brew").ids.box.add_widget(tile)
+    def on_start(self):
+        self.rail.set_width(width=75, factor=2)
+    def rail_open(self):
+        TRANSITIONS = {
+            "open": "close",
+            "close": "open",
+        }
+        self.rail.rail_state = TRANSITIONS[self.rail.rail_state]
 
 if __name__ == '__main__':
     Application().run()
