@@ -1,12 +1,14 @@
 #:kivy 1.0.9
 #:import get_color_from_hex kivy.utils.get_color_from_hex
-
-<MyTile@SmartTileWithStar>
-    size_hint_y: None
-    height: "240dp"
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import MDTimePicker kivymd.uix.picker
 
 <ScreenManager>:
+    transition: FadeTransition()
+    FlushScreen:
     BrewScreen:
+    SteamScreen:
+    WaterScreen:
     HomeScreen:
 
 <HomeScreen>:
@@ -31,50 +33,70 @@
             pos_hint: {"center_y": 0.5, "center_x": 0.775}
             size_hint: (0.2, 0.2)
 
+<BrewLayout@MDFloatLayout>:
+    GraphLayout:
+        num_graphs: 3
+        id: graph_layout
+        pos_hint: {"right": 1}
+        orientation: "vertical"
+    PlayButton:
+        on: True
+        on_press: graph_layout.toggle()
+        on_press: self.toggle()
+        pos_hint: {"center_y": 0.1, "center_x": 0.9}
+
+<SteamLayout@MDFloatLayout>:
+    GraphLayout:
+        num_graphs: 1
+        id: graph_layout
+        pos_hint: {"right": 1}
+        orientation: "vertical"
+    PlayButton:
+        on: True
+        on_press: graph_layout.toggle()
+        on_press: self.toggle()
+        pos_hint: {"center_y": 0.1, "center_x": 0.9}
+
 <BrewScreen>:
     name: "Brew"
+    BrewLayout:
 
-    MDBoxLayout:
-        orientation: "vertical"
-        MDToolbar:
-            title: "MDNavigationRail"
-            md_bg_color: rail.md_bg_color
-            left_action_items: [["menu", lambda x: app.rail_open()]]
+<SteamScreen>:
+    name: "Steam"
+    SteamLayout:
+
+<WaterScreen>:
+    name: "Water"
+
+<FlushScreen>:
+    name: "Flush"
+    MDFloatLayout:
         MDBoxLayout:
+            id: main_layout
+            # cols: 2
+            # rows: 1
             orientation: "horizontal"
-            NavigationRail:
-                id: rail
-                md_bg_color: get_color_from_hex("#344954")
-                color_normal: get_color_from_hex("#718089")
-                color_active: get_color_from_hex("#f3ab44")
-                use_resizeable: True
-                _no_ripple_effect: True
-                on_item_switch: root.manager.current = "home"
-                text_title: ""
-                MDNavigationRailItem:
-                    icon: "coffee"
-                    text: "Brew"
-                    visible: "Selected"
-                MDNavigationRailItem:
-                    icon: "kettle-steam"
-                    text: "Steam"
-                MDNavigationRailItem:
-                    icon: "cup-water"
-                    text: "Water"
-                MDNavigationRailItem:
-                    icon: "water"
-                    text: "Flush"
-
-            MDBoxLayout:
-                MDFloatLayout:
-                    GraphLayout:
-                        id: graph_layout
-                        pos_hint: {"right": 1}
-                        orientation: "vertical"
-                    PlayButton:
-                        on_press: graph_layout.toggle()
-                        on_press: self.toggle(app)
-                        pos_hint: {"center_y": 0.1, "center_x": 0.9}
+            MDLabel:
+                id: duration_label
+                text: "Duration"
+                size_hint_x: None
+                halign: "center"
+            MDSlider:
+                id: slider
+                min: 0
+                max: 120
+                value: 5
+            MDProgressBar:
+                id: progress_bar
+            MDRaisedButton:
+                text: "Change"
+                on_press: app.open_duration_picker()
+        PlayButton:
+            id: play_button
+            on: False
+            on_press: root.toggle()
+            on_press: self.toggle()
+            pos_hint: {"center_y": 0.1, "center_x": 0.9}
 
 # canvas.before:
 #     Color:

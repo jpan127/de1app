@@ -1,6 +1,7 @@
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.metrics import dp
+from kivymd.app import MDApp
 from kivymd.uix.card import MDCard
 from kivymd.uix.navigationrail import MDNavigationRail
 import kivy.uix.scrollview
@@ -27,13 +28,16 @@ class NavigationRail(MDNavigationRail):
         Clock.schedule_once(self.set_action_color_button)
         Clock.schedule_once(self.set_items_color)
 
+    def on_item_switch(self, instance_item):
+        """Called when the menu item is switched."""
+        MDApp.get_running_app().screen_manager.current = instance_item.text
+
     def update_item_highlights(self, screen_name):
         for item in self.rail_items:
-            if item.text != screen_name:
-                item.visible = ""
-            else:
-                item.visible = "Selected"
-            self.set_color_menu_item(item)
+            item.visible = "Selected" if item.text == screen_name else ""
+        for item in self.rail_items:
+            if item.visible == "Selected":
+                self.set_color_menu_item(item)
 
     def set_width(self, interval=None, minimized_width=50, maximized_width=None):
         """

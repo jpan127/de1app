@@ -1,25 +1,38 @@
+from kivy.clock import Clock
 from kivy.utils import get_color_from_hex
+from kivy.properties import BooleanProperty
 from kivymd.color_definitions import colors, hue, palette
 from kivymd.uix.button import MDFloatingActionButton
+from kivymd.app import MDApp
 
 class PlayButton(MDFloatingActionButton):
     """
     A button that toggles color + icon when clicked
     """
     RED = tuple(get_color_from_hex(colors["Red"]["A700"]))
+    on = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.icon = "stop"
         self._no_ripple_effect = True
-        self.md_bg_color = self.RED
+        Clock.schedule_once(self.init)
 
-    def toggle(self, app):
+    @property
+    def primary_color(self):
+        app = MDApp.get_running_app()
+        return tuple(app.theme_cls.primary_color)
+
+    def init(self, *args):
+        self.icon = "play"
+        self.md_bg_color = self.primary_color
+        if self.on:
+            self.toggle()
+
+    def toggle(self):
         # Toggle color
-        primary_color = tuple(app.theme_cls.primary_color)
         self.md_bg_color = list({
-            primary_color : self.RED,
-            self.RED      : primary_color,
+            self.primary_color : self.RED,
+            self.RED           : self.primary_color,
         }[tuple(self.md_bg_color)])
 
         # Toggle icon
